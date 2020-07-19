@@ -3,6 +3,7 @@
 
 #include <atomic>   // std::atomic
 #include <utility>  // std::swap
+#include <iostream>
 
 class shared_count {
 public:
@@ -83,8 +84,16 @@ public:
             shared_count_ = other.shared_count_;
         }
     }
+    /**
+     * 这里的参数是 smart_ptr 类型，先构造一个右值，
+     * 智能指针计数加1，在swap给左值
+     * 为什么 smart_ptr::operator= 对左值和右值都有效，而且不需要对等号两边是否引用同一对象进行判断？
+     * 左值和右值都有效是因为构造参数时，如果是左值，就用拷贝构造构造函数，右值就用移动构造函数
+     * 无论是左值还是右值，构造参数时直接生成新的智能指针，因此不需要判断
+     */
     smart_ptr& operator=(smart_ptr rhs) noexcept
     {
+        std::cout << "operator=(smart_ptr rhs)" << std::endl;
         rhs.swap(*this);
         return *this;
     }
@@ -103,6 +112,7 @@ public:
     }
     void swap(smart_ptr& rhs) noexcept
     {
+        std::cout << "swap(smart_ptr& rhs)" << std::endl;
         using std::swap;
         swap(ptr_, rhs.ptr_);
         swap(shared_count_, rhs.shared_count_);
