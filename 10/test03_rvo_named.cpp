@@ -17,7 +17,20 @@ A getA_named()
     return a;
 }
 
-int main()
+A getA_unnamed()
 {
-    auto a = getA_named();
+    return A();
+}
+
+int main()
+{   
+    {
+        std::cout << "getA_named\n";
+        auto a = getA_named();
+    }
+    {
+        std::cout << "getA_unnamed\n";
+        auto b = getA_unnamed();
+    }
+
 }
